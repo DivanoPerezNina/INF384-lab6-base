@@ -49,7 +49,9 @@ Los requisitos 3 a 5 nacen de los hallazgos de la revisión de seguridad del pro
 
 3.2 SI el cuerpo de la solicitud supera 10 KB, EL sistema DEBE responder 413 con `{ "error": "<mensaje>" }` sin procesar la lista.
 
-3.3 MIENTRAS se atiende una solicitud de 5 000 códigos, EL sistema DEBE responder `GET /health` con 200 en menos de 500 ms.
+3.3 CUANDO se envíe `POST /habilitados` con una lista de 5 000 códigos, EL sistema DEBE responder 413 con `{ "error": "<mensaje>" }`.
+
+3.4 MIENTRAS se atiende una solicitud de `POST /habilitados` con 5 000 códigos, EL sistema DEBE responder `GET /health` con 200 en menos de 500 ms, medido desde que se envían ambas solicitudes.
 
 ### Requisito 4 (seguridad, hallazgo 2): Formato de códigos y errores sin detalles internos
 

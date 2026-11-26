@@ -66,12 +66,12 @@ Complejidad: O(n · r) con n = 87 cursos y r = requisitos por curso; la entrada 
 | Formato inválido | `400 { "error": "aprobados contiene códigos con formato inválido" }` | 4.1, 4.2 |
 | Código inexistente | `400 { "error": "códigos inexistentes: 1INF99" }` | 2.1 |
 | JSON mal formado | `400 { "error": "JSON inválido" }` | 4.4 |
-| Cuerpo > 10 KB | `413 { "error": "solicitud demasiado grande" }` | 3.2 |
+| Cuerpo > 10 KB (incluye la lista de 5 000 códigos) | `413 { "error": "solicitud demasiado grande" }` | 3.2, 3.3 |
 | Cualquier otro error | `500 { "error": "error interno" }`, el detalle solo va a `console.error` | 4.3 |
 
 ## Estrategia de pruebas
 
-- `tests/habilitados.test.js`: supertest sobre `src/app.js`, al menos un test por criterio 1.1 a 5.3. El 3.1 mide el tiempo con `Date.now()`. El 3.3 lanza en paralelo la solicitud de 5 000 códigos y `GET /health`.
+- `tests/habilitados.test.js`: supertest sobre `src/app.js`, al menos un test por criterio 1.1 a 5.3. El 3.1 mide el tiempo con `Date.now()`. El 3.3 envía 5 000 códigos y espera 413; el 3.4 lanza en paralelo esa solicitud y `GET /health`.
 - `tests/errores.test.js`: monta una ruta que lanza una excepción sobre una app de prueba con el mismo middleware para provocar el 500 de 4.3.
 - `tests/validacion.test.js` y `tests/servicios.test.js`: pruebas unitarias de las funciones puras.
 - Cobertura: `coverageThreshold.global.lines = 80` en `jest.config.js` (requisito 7.1).
@@ -83,7 +83,7 @@ Los gates corren en `.github/workflows/ci.yml`. El workflow se dispara en `pull_
 | Gate | Requisito | Herramienta y umbral | Bloquea / avisa | Etapa | Razón |
 | --- | --- | --- | --- | --- | --- |
 | Pruebas y cobertura (`test`) | 7.1 | `jest --coverage` con `coverageThreshold.global.lines: 80` | **Bloquea** | Pull request y `main` (también push a ramas) | Es la política de TI literal. Corre en el PR porque es donde el autor todavía puede corregir barato; se repite en `main` porque un merge puede combinar dos PR que pasaban por separado. |
-| SCA (`sca`) | 6.1 | `npm audit --audit-level=high` (todas las dependencias, prod y dev) | **Bloquea** con alta o crítica; moderadas y bajas solo **avisan** (quedan en el log, el job no falla) | Pull request y `main` (también push a ramas) | La política prohíbe alta y crítica, así que el umbral es `high`. Se incluye dev porque las herramientas de build y test corren en el runner de CI con acceso al código. Bloquear moderadas generaría ruido frecuente sin fix disponible y empujaría a desactivar el gate. Corre también en `main` porque aparecen CVE nuevos sobre dependencias que ayer estaban limpias. |
+| SCA (`sca`) | 6.1 | `npm audit --audit-level=high` (todas las dependencias, prod y dev) | **Bloquea** con alta o crítica; moderadas y bajas solo **avisan** (quedan en el log, el job no falla) | Pull request y `main` (también push a ramas) | La política prohíbe alta y crítica, así que el umbral es `high`. Se incluye dev porque las herramientas de build y test corren en el runner de CI con acceso al código. Bloquear moderadas generaría ruido frecuente sin fix disponible y empujaría a desactivar el gate. Corre también en `main` porque aparecen CVE nuevos sobre dependencias que ayer estaban limpias. Se evaluó y descartó `--omit=dev` en el paso bloqueante (ver `TRAZABILIDAD.md`, cambios a la propuesta de Kiro): la política de TI dice *ninguna* dependencia, sin excepción para dev. |
 | Detección de secretos (`secretos`) | 6.2 | gitleaks 8.21.2, `gitleaks git` sobre **todo el historial** (`fetch-depth: 0`), umbral: 1 hallazgo no registrado en `.gitleaksignore` | **Bloquea** | Pull request y `main` (también push a ramas) | Un secreto filtrado no tiene "nivel aceptable": la política dice ninguno. Se escanea el historial completo y no solo el diff porque borrar el archivo en un commit nuevo no saca la clave del historial. La salida es con `--redact` para que el log del run no vuelva a exponer la clave. Un falso positivo o una clave ya rotada se registra en `.gitleaksignore` con su razón. |
 | SAST (`sast`, extra) | — | CodeQL `javascript-typescript`, suite `security-extended` | **Avisa** (publica alertas en *Security → Code scanning*, el job no falla por hallazgos) | Pull request y `main` | El proyecto es pequeño y CodeQL produce falsos positivos en código Express (por ejemplo, rutas sin rate limit). Mientras no haya una línea base revisada, bloquear frenaría merges por hallazgos no explotables. El plan es pasarlo a bloqueante para severidad alta cuando la línea base esté en cero. |
 

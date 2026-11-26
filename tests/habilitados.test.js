@@ -102,13 +102,19 @@ describe('POST /habilitados · Requisito 3 (hallazgo 1)', () => {
     expect(res.body).toEqual({ error: expect.any(String) });
   });
 
-  test('3.3 mientras se atiende una solicitud de 5 000 códigos, /health responde 200 en menos de 500 ms', async () => {
+  test('3.3 una lista de 5 000 códigos responde 413', async () => {
+    const res = await post({ aprobados: cincoMil });
+
+    expect(res.status).toBe(413);
+    expect(res.body).toEqual({ error: expect.any(String) });
+  });
+
+  test('3.4 mientras se atiende una solicitud de 5 000 códigos, /health responde 200 en menos de 500 ms', async () => {
     const inicio = Date.now();
-    const [grande, salud] = await Promise.all([post({ aprobados: cincoMil }), request(app).get('/health')]);
+    const [, salud] = await Promise.all([post({ aprobados: cincoMil }), request(app).get('/health')]);
 
     expect(salud.status).toBe(200);
     expect(Date.now() - inicio).toBeLessThan(500);
-    expect(grande.status).not.toBe(200);
   });
 });
 
