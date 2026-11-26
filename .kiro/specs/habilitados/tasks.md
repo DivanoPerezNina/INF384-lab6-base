@@ -21,7 +21,7 @@
   - Tests con supertest en `tests/habilitados.test.js`, uno o más por criterio
   - _Requisitos: 1.1–1.6, 2.1, 3.1, 3.3, 4.1, 4.2, 5.1, 5.2, 5.3_
 
-- [ ] 5. Gate de cobertura
+- [x] 5. Gate de cobertura
   - `coverageThreshold.global.lines: 80` en `jest.config.js` y `npm test -- --coverage` en CI
   - _Requisitos: 7.1_
 
