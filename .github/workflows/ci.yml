@@ -2,12 +2,17 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: ['**']
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+  # Requisito 7.1 · Bloquea · PR y main
+  test:
+    name: Pruebas y cobertura (>= 80 % líneas)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,5 +25,62 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Ejecutar pruebas
-        run: npm test
+      - name: Ejecutar pruebas con umbral de cobertura
+        run: npm test -- --coverage
+
+  # Requisito 6.1 · Bloquea con high/critical, moderadas solo avisan · PR y main
+  sca:
+    name: SCA (npm audit, umbral high)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Reporte completo (aviso, no bloquea)
+        run: npm audit || true
+
+      - name: Gate (falla con severidad alta o crítica)
+        run: npm audit --audit-level=high
+
+  # Requisito 6.2 · Bloquea · PR y main · historial completo
+  secretos:
+    name: Detección de secretos (gitleaks, historial completo)
+    runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: 8.21.2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Instalar gitleaks
+        run: |
+          curl -sSL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          tar -xzf gitleaks.tar.gz gitleaks
+          sudo mv gitleaks /usr/local/bin/
+
+      - name: Escanear todo el historial
+        run: gitleaks git --redact --verbose --exit-code 1 .
+
+  # Extra · SAST · Avisa (alertas en Security, el job no falla por hallazgos) · PR y main
+  sast:
+    name: SAST (CodeQL, aviso)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:javascript-typescript
