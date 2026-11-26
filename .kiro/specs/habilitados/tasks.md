@@ -25,7 +25,7 @@
   - `coverageThreshold.global.lines: 80` en `jest.config.js` y `npm test -- --coverage` en CI
   - _Requisitos: 7.1_
 
-- [ ] 6. Gate de SCA
+- [x] 6. Gate de SCA
   - Job `sca` con `npm audit --audit-level=high`
   - Corregir la dependencia vulnerable (`lodash`)
   - _Requisitos: 6.1_
