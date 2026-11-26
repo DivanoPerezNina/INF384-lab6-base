@@ -11,7 +11,7 @@
   - Tests unitarios en `tests/validacion.test.js`
   - _Requisitos: 2.1, 3.1, 4.1, 4.2, 5.1, 5.2, 5.3_
 
-- [ ] 3. Cálculo de cursos habilitados
+- [x] 3. Cálculo de cursos habilitados
   - Crear `src/servicios/habilitados.js` con `calcularHabilitados(aprobados)` usando `src/data/repositorio.js`
   - Tests unitarios en `tests/servicios.test.js`
   - _Requisitos: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
