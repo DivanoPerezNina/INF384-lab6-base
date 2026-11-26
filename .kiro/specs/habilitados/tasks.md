@@ -6,7 +6,7 @@
   - Tests en `tests/errores.test.js` para 3.2, 4.3 y 4.4
   - _Requisitos: 3.2, 4.3, 4.4_
 
-- [ ] 2. Validación de la entrada
+- [x] 2. Validación de la entrada
   - Crear `src/validacion/aprobados.js` con `validarAprobados(body)`
   - Tests unitarios en `tests/validacion.test.js`
   - _Requisitos: 2.1, 3.1, 4.1, 4.2, 5.1, 5.2, 5.3_
