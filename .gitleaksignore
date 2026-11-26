@@ -1,0 +1,7 @@
+# CATALOGO_API_KEY publicada en config/ejemplo.env en el commit inicial 7506fec.
+# La clave se trata como comprometida: se retiró del archivo (reemplazada por un
+# marcador), se rotó en el proveedor del catálogo y la nueva clave solo vive en
+# .env local / secretos del entorno. No se reescribe el historial porque la rama
+# ya está publicada en forks. Se ignora únicamente esta huella exacta; cualquier
+# otra aparición de una clave vuelve a bloquear el pipeline.
+7506fecff32b342baaa4aa5dcb595bb5ccc75634:config/ejemplo.env:generic-api-key:4

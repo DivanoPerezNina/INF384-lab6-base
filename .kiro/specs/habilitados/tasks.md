@@ -30,12 +30,12 @@
   - Corregir la dependencia vulnerable (`lodash`)
   - _Requisitos: 6.1_
 
-- [ ] 7. Gate de detección de secretos
+- [x] 7. Gate de detección de secretos
   - Job `secretos` con gitleaks sobre todo el historial
   - Retirar la clave de `config/ejemplo.env`, rotarla y registrar su huella en `.gitleaksignore`
   - _Requisitos: 6.2_
 
-- [ ] 8. Gate de SAST (extra)
+- [x] 8. Gate de SAST (extra)
   - Job `sast` con CodeQL en modo aviso
 
 - [ ] 9. Trazabilidad
