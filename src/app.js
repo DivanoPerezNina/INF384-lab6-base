@@ -15,6 +15,7 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/cursos', require('./routes/cursos'));
+app.use('/habilitados', require('./routes/habilitados'));
 
 app.use(manejarErrores);
 

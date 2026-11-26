@@ -16,7 +16,7 @@
   - Tests unitarios en `tests/servicios.test.js`
   - _Requisitos: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
 
-- [ ] 4. Ruta `POST /habilitados`
+- [x] 4. Ruta `POST /habilitados`
   - Crear `src/routes/habilitados.js` y montarlo en `src/app.js`
   - Tests con supertest en `tests/habilitados.test.js`, uno o más por criterio
   - _Requisitos: 1.1–1.6, 2.1, 3.1, 3.3, 4.1, 4.2, 5.1, 5.2, 5.3_
