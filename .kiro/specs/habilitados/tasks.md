@@ -38,5 +38,5 @@
 - [x] 8. Gate de SAST (extra)
   - Job `sast` con CodeQL en modo aviso
 
-- [ ] 9. Trazabilidad
+- [x] 9. Trazabilidad
   - Completar `TRAZABILIDAD.md` con requisito → gate/test → run fallido y run corregido
