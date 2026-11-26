@@ -34,4 +34,8 @@ Funcionalidad para consultar los cursos de la malla y el detalle de un curso con
 
 #### Criterios de aceptación
 
-3.1 El sistema debe responder rápido y manejar los errores de forma segura.
+3.1 SI ocurre un error no controlado durante una solicitud, EL sistema DEBE responder 500 con exactamente `{ "error": "error interno" }`, sin stack trace ni rutas de archivo.
+
+3.2 CUANDO se solicite `GET /cursos` sin filtro, EL sistema DEBE responder en menos de 200 ms con los datos ya cargados en memoria.
+
+> Nota de revisión: el criterio original ("responder rápido y manejar los errores de forma segura") no era verificable: usaba adjetivos sin medida y mezclaba dos comportamientos. Se dividió en 3.1 y 3.2.
