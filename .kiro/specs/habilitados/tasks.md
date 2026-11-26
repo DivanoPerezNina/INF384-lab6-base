@@ -1,6 +1,6 @@
 # Plan de implementación: Cursos habilitados
 
-- [ ] 1. Manejo de errores sin detalles internos y límite de cuerpo
+- [x] 1. Manejo de errores sin detalles internos y límite de cuerpo
   - Crear `src/middleware/errores.js` (400 JSON inválido, 413 cuerpo grande, 500 genérico)
   - Configurar `express.json({ limit: '10kb' })` y registrar el middleware al final de `src/app.js`
   - Tests en `tests/errores.test.js` para 3.2, 4.3 y 4.4

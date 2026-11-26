@@ -6,7 +6,8 @@ const manejarErrores = require('./middleware/errores');
 const app = express();
 
 app.disable('x-powered-by');
-app.use(express.json());
+// Requisito 3.2: cuerpos de más de 10 KB se rechazan con 413 antes de parsear.
+app.use(express.json({ limit: '10kb' }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.get('/health', (req, res) => {
